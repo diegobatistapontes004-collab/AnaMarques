@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ana Marques · Estética Avançada</title>
+  <meta name="description" content="Estética avançada com tecnologia de ponta. Limpeza de pele, harmonização, laser e protocolos personalizados. Agende sua avaliação." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet" />
+  <style>
+    /* ============ TOKENS ============ */
+    :root {
+      --bg-0: #fffdf9;
+      --bg-1: #faf3e6;
+      --bg-2: #f3e8d3;
+      --surface: rgba(255, 255, 255, 0.65);
+      --surface-hover: rgba(255, 255, 255, 0.95);
+      --border: rgba(138, 90, 54, 0.16);
+      --border-hover: rgba(166, 116, 70, 0.45);
+      --text-1: #3a2c1c;
+      --text-2: #6e5a41;
+      --text-3: #9c8a70;
+      --beige: #ecd9bc;
+      --caramel: #b07c46;
+      --gold: #a9803d;
+      --brown: #7a4e2c;
+      --grad-brand: linear-gradient(135deg, #c89a6a 0%, #8a5a36 60%, #6d4426 100%);
+      --radius: 20px;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --shadow-glow: 0 0 60px rgba(200, 154, 106, 0.25);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: linear-gradient(160deg, #ffffff 0%, #faf3e6 45%, #f0e2c8 100%) fixed;
+      color: var(--text-1);
+      font-family: 'Outfit', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: rgba(200, 154, 106, 0.35); }
+
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    h1, h2, h3 { line-height: 1.15; font-weight: 700; letter-spacing: -0.02em; }
+
+    .serif { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500; }
+
+    .container { width: min(1160px, 92%); margin-inline: auto; }
+
+    .grad-text {
+      background: var(--grad-brand);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* ============ FUNDO ANIMADO ============ */
+    .bg-fx { position: fixed; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; }
+    .blob {
+      position: absolute; border-radius: 50%; filter: blur(110px); opacity: 0.5;
+      animation: drift 22s var(--ease) infinite alternate;
+    }
+    .blob-1 { width: 520px; height: 520px; background: rgba(207, 160, 111, 0.40); top: -160px; left: -120px; }
+    .blob-2 { width: 460px; height: 460px; background: rgba(236, 217, 188, 0.60); top: 30%; right: -160px; animation-delay: -7s; }
+    .blob-3 { width: 420px; height: 420px; background: rgba(176, 124, 70, 0.28); bottom: -140px; left: 30%; animation-delay: -14s; }
+
+    @keyframes drift {
+      0%   { transform: translate(0, 0) scale(1); }
+      50%  { transform: translate(70px, -50px) scale(1.12); }
+      100% { transform: translate(-50px, 60px) scale(0.94); }
+    }
+
+    .grid-fx {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(138,90,54,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(138,90,54,0.05) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, black 30%, transparent 75%);
+    }
+
+    /* luz que segue o mouse */
+    #cursor-glow {
+      position: fixed; width: 480px; height: 480px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(200,154,106,0.14) 0%, transparent 65%);
+      pointer-events: none; z-index: 0;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.4s;
+    }
+
+    /* ============ NAVBAR ============ */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      transition: background 0.35s var(--ease), box-shadow 0.35s, backdrop-filter 0.35s;
+    }
+    header.scrolled {
+      background: rgba(255, 252, 246, 0.82);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 1px 0 rgba(138,90,54,0.12);
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 0;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.15rem; }
+    .logo-mark {
+      width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center;
+      background: var(--grad-brand); color: #fff8ec; font-weight: 800; font-size: 1rem;
+      box-shadow: 0 4px 18px rgba(207,160,111,0.45);
+      transition: transform 0.3s var(--ease);
+    }
+    .logo:hover .logo-mark { transform: rotate(-8deg) scale(1.08); }
+
+    .nav-links { display: flex; gap: 6px; align-items: center; }
+    .nav-links a {
+      position: relative; padding: 9px 16px; border-radius: 99px;
+      color: var(--text-2); font-weight: 500; font-size: 0.95rem;
+      transition: color 0.25s, background 0.25s;
+    }
+    .nav-links a:hover { color: var(--text-1); background: var(--surface-hover); }
+    .nav-links a::after {
+      content: ""; position: absolute; left: 50%; bottom: 4px;
+      width: 0; height: 2px; border-radius: 2px;
+      background: var(--grad-brand);
+      transition: width 0.3s var(--ease), left 0.3s var(--ease);
+    }
+    .nav-links a:hover::after { width: 55%; left: 22.5%; }
+
+    /* ============ BOTÕES ============ */
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 28px; border-radius: 99px; border: none;
+      font-weight: 600; font-size: 1rem;
+      transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), background 0.25s;
+      will-change: transform;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary {
+      background: var(--grad-brand); color: #fff8ec;
+      box-shadow: 0 8px 28px rgba(207, 160, 111, 0.35);
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 38px rgba(207, 160, 111, 0.5); }
+    .btn-ghost {
+      background: var(--surface); color: var(--text-1);
+      border: 1px solid var(--border); backdrop-filter: blur(8px);
+    }
+    .btn-ghost:hover { transform: translateY(-3px); background: var(--surface-hover); border-color: var(--border-hover); }
+    .btn svg { transition: transform 0.25s var(--ease); }
+    .btn:hover svg { transform: translateX(4px); }
+
+    /* ============ HERO ============ */
+    .hero {
+      min-height: 100svh; display: flex; align-items: center;
+      padding: 130px 0 80px; position: relative;
+    }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 18px; border-radius: 99px;
+      background: var(--surface); border: 1px solid var(--border);
+      font-size: 0.85rem; color: var(--text-2); backdrop-filter: blur(8px);
+      margin-bottom: 26px;
+    }
+    .badge .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--gold); box-shadow: 0 0 12px var(--gold);
+      animation: pulse 2.2s infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+    .hero h1 { font-size: clamp(2.6rem, 5.6vw, 4.4rem); margin-bottom: 22px; }
+    .hero p.lead { font-size: 1.18rem; color: var(--text-2); max-width: 520px; margin-bottom: 38px; }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    .hero-stats { display: flex; gap: 40px; margin-top: 56px; flex-wrap: wrap; }
+    .stat .num { font-size: 2rem; font-weight: 800; }
+    .stat .lbl { color: var(--text-3); font-size: 0.88rem; }
+
+    /* cartão 3D do hero */
+    .hero-visual { perspective: 1100px; }
+    .glass-card {
+      position: relative;
+      border-radius: 28px;
+      background: linear-gradient(160deg, rgba(255,255,255,0.92), rgba(255,255,255,0.55));
+      border: 1px solid var(--border);
+      backdrop-filter: blur(16px);
+      padding: 34px;
+      transform-style: preserve-3d;
+      transition: transform 0.18s ease-out, box-shadow 0.3s;
+      box-shadow: 0 30px 80px rgba(122,78,44,0.18), var(--shadow-glow);
+    }
+    .glass-card::before {
+      content: ""; position: absolute; inset: 0; border-radius: 28px;
+      background: radial-gradient(600px circle at var(--mx, 50%) var(--my, 50%), rgba(200,154,106,0.12), transparent 45%);
+      pointer-events: none;
+    }
+    .gc-head { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; }
+    .gc-avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--grad-brand); display: grid; place-items: center;
+      font-weight: 800; color: #fff8ec; font-size: 1.2rem;
+    }
+    .gc-head .name { font-weight: 700; }
+    .gc-head .role { color: var(--text-3); font-size: 0.85rem; }
+
+    .gc-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px; border-radius: 14px; background: rgba(138,90,54,0.06);
+      border: 1px solid transparent;
+      margin-bottom: 12px; transform: translateZ(30px);
+      transition: background 0.25s, border-color 0.25s, transform 0.25s var(--ease);
+    }
+    .gc-row:hover { background: rgba(138,90,54,0.10); border-color: var(--border-hover); transform: translateZ(30px) translateX(6px); }
+    .gc-row .ic {
+      width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center;
+      background: rgba(176,124,70,0.15); color: var(--brown); flex-shrink: 0;
+    }
+    .gc-row .tx { flex: 1; margin-left: 12px; }
+    .gc-row .tx b { display: block; font-size: 0.95rem; }
+    .gc-row .tx span { color: var(--text-3); font-size: 0.8rem; }
+    .gc-row .ok { color: var(--gold); font-size: 0.8rem; font-weight: 600; }
+
+    .float-chip {
+      position: absolute; padding: 12px 18px; border-radius: 16px;
+      background: rgba(255, 255, 255, 0.92); border: 1px solid var(--border);
+      backdrop-filter: blur(12px); font-size: 0.85rem; font-weight: 600;
+      display: flex; align-items: center; gap: 8px;
+      animation: floaty 5s ease-in-out infinite;
+      box-shadow: 0 12px 32px rgba(122,78,44,0.18);
+    }
+    .chip-1 { top: -24px; right: 8px; color: var(--gold); }
+    .chip-2 { bottom: -20px; left: -16px; color: var(--brown); animation-delay: -2.5s; }
+    @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+    /* ============ SEÇÕES ============ */
+    section { padding: 110px 0; position: relative; }
+    .sec-head { text-align: center; max-width: 640px; margin: 0 auto 64px; }
+    .sec-head .kicker {
+      display: inline-block; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 14px;
+    }
+    .sec-head h2 { font-size: clamp(1.9rem, 3.6vw, 2.8rem); margin-bottom: 16px; }
+    .sec-head p { color: var(--text-2); }
+
+    /* reveal on scroll */
+    .reveal { opacity: 0; transform: translateY(34px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+    .reveal.in { opacity: 1; transform: none; }
+
+    /* ============ SERVIÇOS ============ */
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .svc {
+      position: relative; padding: 34px 28px; border-radius: var(--radius);
+      background: var(--surface); border: 1px solid var(--border);
+      overflow: hidden; cursor: pointer;
+      transition: transform 0.35s var(--ease), border-color 0.35s, box-shadow 0.35s;
+    }
+    .svc:hover {
+      transform: translateY(-10px);
+      border-color: var(--border-hover);
+      box-shadow: 0 24px 50px rgba(122,78,44,0.18), 0 0 40px rgba(207,160,111,0.18);
+    }
+    .svc::before {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(220,184,135,0.12), transparent 50%);
+      opacity: 0; transition: opacity 0.35s; pointer-events: none;
+    }
+    .svc:hover::before { opacity: 1; }
+    .svc .icon {
+      width: 58px; height: 58px; border-radius: 16px; display: grid; place-items: center;
+      background: linear-gradient(135deg, rgba(236,217,188,0.55), rgba(176,124,70,0.25));
+      border: 1px solid var(--border);
+      margin-bottom: 22px; color: var(--brown);
+      transition: transform 0.35s var(--ease), box-shadow 0.35s;
+    }
+    .svc:hover .icon { transform: scale(1.12) rotate(-6deg); box-shadow: 0 8px 24px rgba(207,160,111,0.3); }
+    .svc h3 { font-size: 1.25rem; margin-bottom: 10px; }
+    .svc p { color: var(--text-2); font-size: 0.95rem; margin-bottom: 18px; }
+    .svc .more {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.9rem; font-weight: 600; color: var(--gold);
+      opacity: 0; transform: translateX(-8px);
+      transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+    }
+    .svc:hover .more { opacity: 1; transform: translateX(0); }
+
+    /* ============ TECNOLOGIAS (marquee) ============ */
+    .tech-band { padding: 40px 0; border-block: 1px solid var(--border); overflow: hidden; }
+    .marquee { display: flex; gap: 64px; width: max-content; animation: scroll-x 28s linear infinite; }
+    .tech-band:hover .marquee { animation-play-state: paused; }
+    .marquee span {
+      display: flex; align-items: center; gap: 12px;
+      color: var(--text-3); font-weight: 600; font-size: 1.05rem; white-space: nowrap;
+      transition: color 0.3s;
+    }
+    .marquee span:hover { color: var(--text-1); }
+    .marquee svg { color: var(--caramel); }
+    @keyframes scroll-x { to { transform: translateX(-50%); } }
+
+    /* ============ RESULTADOS ============ */
+    .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .result-card {
+      position: relative; border-radius: var(--radius); overflow: hidden;
+      aspect-ratio: 4/5; border: 1px solid var(--border);
+      transition: transform 0.4s var(--ease), box-shadow 0.4s;
+    }
+    .result-card:hover { transform: translateY(-8px) scale(1.015); box-shadow: 0 26px 60px rgba(122,78,44,0.30); }
+    .result-card .ph {
+      position: absolute; inset: 0; display: grid; place-items: center;
+      font-size: 3.4rem; transition: transform 0.6s var(--ease);
+    }
+    .result-card:hover .ph { transform: scale(1.08); }
+    .r1 .ph { background: linear-gradient(160deg, #f3e2c6, #dec39a); }
+    .r2 .ph { background: linear-gradient(160deg, #ecd6b4, #cfa977); }
+    .r3 .ph { background: linear-gradient(160deg, #e6d2b4, #bfa078); }
+    .result-card .overlay {
+      position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 26px; background: linear-gradient(180deg, transparent 35%, rgba(58, 40, 22, 0.94));
+      opacity: 0; transform: translateY(14px);
+      transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
+    }
+    .result-card:hover .overlay { opacity: 1; transform: none; }
+    .overlay h3 { font-size: 1.15rem; margin-bottom: 6px; color: #fff6e8; }
+    .overlay p { color: #ecdcc2; font-size: 0.88rem; }
+    .overlay .tag {
+      position: absolute; top: 20px; right: 20px;
+      padding: 6px 14px; border-radius: 99px; font-size: 0.75rem; font-weight: 700;
+      background: var(--grad-brand); color: #fff8ec;
+    }
+
+    /* ============ DEPOIMENTOS ============ */
+    .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .quote {
+      padding: 32px 28px; border-radius: var(--radius);
+      background: var(--surface); border: 1px solid var(--border);
+      transition: transform 0.35s var(--ease), border-color 0.35s, background 0.35s;
+    }
+    .quote:hover { transform: translateY(-8px) rotate(-0.5deg); border-color: var(--border-hover); background: var(--surface-hover); }
+    .quote .stars { color: #c98a2e; letter-spacing: 3px; margin-bottom: 16px; }
+    .quote p { color: var(--text-2); font-size: 0.98rem; margin-bottom: 22px; }
+    .quote .who { display: flex; align-items: center; gap: 12px; }
+    .quote .who .av {
+      width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center;
+      font-weight: 700; font-size: 0.9rem; color: #3a2918;
+    }
+    .q1 .av { background: linear-gradient(135deg, #ecd9bc, #d9bd94); }
+    .q2 .av { background: linear-gradient(135deg, #d9b285, #c89a6a); }
+    .q3 .av { background: linear-gradient(135deg, #c89a6a, #b07c46); }
+    .quote .who b { display: block; font-size: 0.95rem; }
+    .quote .who span { color: var(--text-3); font-size: 0.8rem; }
+
+    /* ============ CTA FINAL ============ */
+    .cta-wrap {
+      position: relative; border-radius: 32px; overflow: hidden;
+      padding: 80px 40px; text-align: center;
+      background: linear-gradient(160deg, rgba(207,160,111,0.20), rgba(255,255,255,0.50));
+      border: 1px solid var(--border);
+    }
+    .cta-wrap::before {
+      content: ""; position: absolute; width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(207,160,111,0.28), transparent 65%);
+      top: -300px; left: 50%; transform: translateX(-50%);
+      animation: pulse 5s ease-in-out infinite;
+    }
+    .cta-wrap h2 { font-size: clamp(1.9rem, 3.6vw, 2.7rem); margin-bottom: 16px; position: relative; }
+    .cta-wrap p { color: var(--text-2); max-width: 480px; margin: 0 auto 36px; position: relative; }
+
+    /* ============ FOOTER ============ */
+    footer { border-top: 1px solid var(--border); padding: 48px 0 36px; }
+    .foot { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .foot .links { display: flex; gap: 20px; }
+    .foot .links a { color: var(--text-3); font-size: 0.9rem; transition: color 0.25s; }
+    .foot .links a:hover { color: var(--gold); }
+    .foot .copy { color: var(--text-3); font-size: 0.85rem; }
+
+    /* ============ WHATSAPP FLUTUANTE ============ */
+    .wa-btn {
+      position: fixed; right: 24px; bottom: 24px; z-index: 90;
+      width: 60px; height: 60px; border-radius: 50%;
+      background: linear-gradient(135deg, #cfa06f, #8a5a36); display: grid; place-items: center;
+      box-shadow: 0 10px 30px rgba(207, 160, 111, 0.45);
+      transition: transform 0.3s var(--ease), box-shadow 0.3s;
+    }
+    .wa-btn:hover { transform: scale(1.12) rotate(8deg); box-shadow: 0 14px 40px rgba(207,160,111,0.6); }
+    .wa-btn svg { width: 30px; height: 30px; color: #f7f1e6; }
+
+    /* ============ RESPONSIVO ============ */
+    .menu-btn { display: none; }
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 64px; }
+      .services-grid, .results-grid, .quotes { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .hero { padding-top: 110px; }
+      section { padding: 80px 0; }
+    }
+
+    /* respeita usuários sensíveis a movimento */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- fundo animado -->
+  <div class="bg-fx" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+  <div class="grid-fx" aria-hidden="true"></div>
+  <div id="cursor-glow" aria-hidden="true"></div>
+
+  <!-- ============ NAV ============ -->
+  <header id="header">
+    <div class="container nav">
+      <a href="#" class="logo" aria-label="Ana Marques Estética — início">
+        <span class="logo-mark">AM</span>
+        Ana Marques<span class="serif grad-text" style="font-size:1rem;">estética</span>
+      </a>
+      <nav class="nav-links" aria-label="Navegação principal">
+        <a href="#servicos">Serviços</a>
+        <a href="#tecnologia">Tecnologia</a>
+        <a href="#resultados">Resultados</a>
+        <a href="#depoimentos">Depoimentos</a>
+      </nav>
+      <a class="btn btn-primary" href="#agendar" style="padding:11px 22px; font-size:0.92rem;">
+        Agendar avaliação
+      </a>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="badge"><span class="dot"></span> Agenda aberta para este mês</span>
+        <h1>
+          Sua beleza, elevada pela
+          <span class="grad-text">tecnologia</span>
+          <span class="serif">e pelo cuidado.</span>
+        </h1>
+        <p class="lead">
+          Protocolos de estética avançada personalizados, com equipamentos de última geração
+          e acompanhamento próximo em cada etapa do seu tratamento.
+        </p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#agendar">
+            Agendar minha avaliação
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="#servicos">Conhecer tratamentos</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><div class="num grad-text" data-count="1200">0</div><div class="lbl">clientes atendidas</div></div>
+          <div class="stat"><div class="num grad-text" data-count="8">0</div><div class="lbl">anos de experiência</div></div>
+          <div class="stat"><div class="num grad-text" data-count="15">0</div><div class="lbl">protocolos exclusivos</div></div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="glass-card" id="tilt-card">
+          <div class="float-chip chip-1">✨ Resultado visível</div>
+          <div class="float-chip chip-2">💜 Atendimento humanizado</div>
+          <div class="gc-head">
+            <div class="gc-avatar">AM</div>
+            <div>
+              <div class="name">Ana Marques</div>
+              <div class="role">Esteticista · Especialista em estética avançada</div>
+            </div>
+          </div>
+          <div class="gc-row">
+            <span class="ic">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+            </span>
+            <span class="tx"><b>Avaliação completa da pele</b><span>análise digital + plano personalizado</span></span>
+            <span class="ok">Incluso</span>
+          </div>
+          <div class="gc-row">
+            <span class="ic">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2-6.3-4.5-6.3 4.5L8 13.8 2 9.2h7.6z"/></svg>
+            </span>
+            <span class="tx"><b>Protocolo sob medida</b><span>combinação ideal de tecnologias</span></span>
+            <span class="ok">Exclusivo</span>
+          </div>
+          <div class="gc-row">
+            <span class="ic">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 1 1 16.1-3.8z"/></svg>
+            </span>
+            <span class="tx"><b>Acompanhamento contínuo</b><span>suporte direto pelo WhatsApp</span></span>
+            <span class="ok">Sempre</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAIXA DE TECNOLOGIAS ============ -->
+  <div class="tech-band" id="tecnologia" aria-label="Tecnologias utilizadas">
+    <div class="marquee">
+      <!-- lista duplicada para o loop infinito -->
+      <span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2-6.3-4.5-6.3 4.5L8 13.8 2 9.2h7.6z"/></svg> Laser de Diodo</span>
+      <span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2-6.3-4.5-6.3 4.5L8 13.8 2 9.2h7.6z"/></svg> Radiofrequência</span>
+      <span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2-6.3-4.5-6.3 4.5L8 13.8 2 9.2h7.6z"/></svg> Microagulhamento</span>
+      <span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2-6.3-4.5-6.3 4.5L8 13.8 2 9.2h7.6z"/></svg> Criolipólise</span>
+      <span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2-6.3-4.5-6.3 4.5L8 13.8 2 9.2h7.6z"/></svg> Ultrassom Focalizado</span>
+      <span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2-6.3-4.5-6.3 4.5L8 13.8 2 9.2h7.6z"/></svg> LED Terapia</span>
+      <span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2-6.3-4.5-6.3 4.5L8 13.8 2 9.2h7.6z"/></svg> Laser de Diodo</span>
+      <span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2-6.3-4.5-6.3 4.5L8 13.8 2 9.2h7.6z"/></svg> Radiofrequência</span>
+      <span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2-6.3-4.5-6.3 4.5L8 13.8 2 9.2h7.6z"/></svg> Microagulhamento</span>
+      <span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2-6.3-4.5-6.3 4.5L8 13.8 2 9.2h7.6z"/></svg> Criolipólise</span>
+      <span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2-6.3-4.5-6.3 4.5L8 13.8 2 9.2h7.6z"/></svg> Ultrassom Focalizado</span>
+      <span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2-6.3-4.5-6.3 4.5L8 13.8 2 9.2h7.6z"/></svg> LED Terapia</span>
+    </div>
+  </div>
+
+  <!-- ============ SERVIÇOS ============ -->
+  <section id="servicos">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="kicker">Tratamentos</span>
+        <h2>Protocolos que unem <span class="grad-text">ciência</span> <span class="serif">e sensibilidade</span></h2>
+        <p>Cada tratamento começa com uma avaliação completa para entender a sua pele e os seus objetivos.</p>
+      </div>
+      <div class="services-grid">
+        <article class="svc reveal">
+          <div class="icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>
+          </div>
+          <h3>Limpeza de Pele Premium</h3>
+          <p>Higienização profunda com extração suave, máscara calmante e LED terapia para uma pele renovada.</p>
+          <span class="more">Saiba mais
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </article>
+        <article class="svc reveal" style="transition-delay:0.08s">
+          <div class="icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4.5 13.5h6L11 22l8.5-11.5h-6z"/></svg>
+          </div>
+          <h3>Laser & Radiofrequência</h3>
+          <p>Tecnologia de ponta para rejuvenescimento, firmeza e uniformização do tom da pele, sem dor.</p>
+          <span class="more">Saiba mais
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </article>
+        <article class="svc reveal" style="transition-delay:0.16s">
+          <div class="icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.6-9.3-9A5.6 5.6 0 0 1 12 6.3 5.6 5.6 0 0 1 21.3 12C19 16.4 12 21 12 21z"/></svg>
+          </div>
+          <h3>Skincare Personalizado</h3>
+          <p>Rotina de cuidados criada para o seu tipo de pele, com acompanhamento mensal e ajustes contínuos.</p>
+          <span class="more">Saiba mais
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </article>
+        <article class="svc reveal">
+          <div class="icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3v4a4 4 0 0 0 8 0V3M5 21c0-4 3-6 7-6s7 2 7 6"/></svg>
+          </div>
+          <h3>Estética Corporal</h3>
+          <p>Criolipólise, drenagem e protocolos modeladores para definir contornos e tratar a celulite.</p>
+          <span class="more">Saiba mais
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </article>
+        <article class="svc reveal" style="transition-delay:0.08s">
+          <div class="icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11.5a3.5 3.5 0 1 1 7 0c0 2-1.5 3-1.5 4.5h-4c0-1.5-1.5-2.5-1.5-4.5zM10.5 19h4M12 2v2M4.2 5.2l1.4 1.4M19.8 5.2l-1.4 1.4M2 12h2M20 12h2"/></svg>
+          </div>
+          <h3>Microagulhamento</h3>
+          <p>Estímulo natural de colágeno para tratar cicatrizes, poros dilatados e linhas de expressão.</p>
+          <span class="more">Saiba mais
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </article>
+        <article class="svc reveal" style="transition-delay:0.16s">
+          <div class="icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+          </div>
+          <h3>Spa Day & Relaxamento</h3>
+          <p>Experiência completa de bem-estar: massagem relaxante, aromaterapia e cuidados faciais.</p>
+          <span class="more">Saiba mais
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RESULTADOS ============ -->
+  <section id="resultados" style="padding-top: 40px;">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="kicker">Resultados</span>
+        <h2>Transformações <span class="serif grad-text">reais</span></h2>
+        <p>Passe o mouse sobre os cartões para conhecer cada caso. Substitua pelas fotos reais dos seus atendimentos.</p>
+      </div>
+      <div class="results-grid">
+        <article class="result-card r1 reveal">
+          <div class="ph" aria-hidden="true">✨</div>
+          <div class="overlay">
+            <span class="tag">Facial</span>
+            <h3>Rejuvenescimento</h3>
+            <p>Protocolo de 6 sessões com radiofrequência e microagulhamento.</p>
+          </div>
+        </article>
+        <article class="result-card r2 reveal" style="transition-delay:0.08s">
+          <div class="ph" aria-hidden="true">🌸</div>
+          <div class="overlay">
+            <span class="tag">Pele</span>
+            <h3>Tratamento de acne</h3>
+            <p>Limpeza profunda, LED terapia e skincare personalizado em 3 meses.</p>
+          </div>
+        </article>
+        <article class="result-card r3 reveal" style="transition-delay:0.16s">
+          <div class="ph" aria-hidden="true">💎</div>
+          <div class="overlay">
+            <span class="tag">Corporal</span>
+            <h3>Contorno corporal</h3>
+            <p>Criolipólise combinada com drenagem linfática e ultrassom.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DEPOIMENTOS ============ -->
+  <section id="depoimentos" style="padding-top: 40px;">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="kicker">Depoimentos</span>
+        <h2>Quem vive a experiência, <span class="serif grad-text">recomenda</span></h2>
+      </div>
+      <div class="quotes">
+        <article class="quote q1 reveal">
+          <div class="stars" aria-label="5 estrelas">★★★★★</div>
+          <p>"A Ana transformou minha pele em poucos meses. O atendimento é impecável e a tecnologia que ela usa faz toda a diferença. Me sinto outra pessoa!"</p>
+          <div class="who">
+            <span class="av">MR</span>
+            <div><b>Mariana R.</b><span>Tratamento facial · 6 meses</span></div>
+          </div>
+        </article>
+        <article class="quote q2 reveal" style="transition-delay:0.08s">
+          <div class="stars" aria-label="5 estrelas">★★★★★</div>
+          <p>"Nunca imaginei que um tratamento estético pudesse ser tão confortável. Cada detalhe é pensado para a gente se sentir acolhida. Resultado incrível."</p>
+          <div class="who">
+            <span class="av">JS</span>
+            <div><b>Juliana S.</b><span>Criolipólise · 3 sessões</span></div>
+          </div>
+        </article>
+        <article class="quote q3 reveal" style="transition-delay:0.16s">
+          <div class="stars" aria-label="5 estrelas">★★★★★</div>
+          <p>"O acompanhamento pelo WhatsApp me deu muita segurança. A Ana explica tudo, acompanha a evolução e ajusta o protocolo. Profissional rara."</p>
+          <div class="who">
+            <span class="av">FA</span>
+            <div><b>Fernanda A.</b><span>Skincare personalizado · 1 ano</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA FINAL ============ -->
+  <section id="agendar" style="padding-top: 40px;">
+    <div class="container">
+      <div class="cta-wrap reveal">
+        <h2>Pronta para a sua <span class="grad-text">melhor versão</span><span class="serif">?</span></h2>
+        <p>Agende uma avaliação gratuita e receba um plano de tratamento feito sob medida para você.</p>
+        <a class="btn btn-primary" href="https://wa.me/5500000000000?text=Ol%C3%A1%2C%20Ana!%20Quero%20agendar%20uma%20avalia%C3%A7%C3%A3o." target="_blank" rel="noopener" style="position:relative;">
+          Agendar pelo WhatsApp
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    <div class="container foot">
+      <a href="#" class="logo" aria-label="Ana Marques Estética — início">
+        <span class="logo-mark" style="width:32px;height:32px;font-size:0.85rem;">AM</span>
+        Ana Marques
+      </a>
+      <div class="links">
+        <a href="#" aria-label="Instagram">Instagram</a>
+        <a href="#" aria-label="WhatsApp">WhatsApp</a>
+        <a href="#" aria-label="Localização">Como chegar</a>
+      </div>
+      <div class="copy">© 2026 Ana Marques Estética. Todos os direitos reservados.</div>
+    </div>
+  </footer>
+
+  <!-- WhatsApp flutuante -->
+  <a class="wa-btn" href="https://wa.me/5500000000000?text=Ol%C3%A1%2C%20Ana!%20Quero%20agendar%20uma%20avalia%C3%A7%C3%A3o." target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.2 5.1 4.49.71.3 1.27.49 1.7.63.72.23 1.37.2 1.88.12.58-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35zM12.05 21.78h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.83 9.83 0 0 1-1.51-5.26c0-5.44 4.43-9.86 9.89-9.86a9.8 9.8 0 0 1 6.99 2.9 9.8 9.8 0 0 1 2.89 6.98c0 5.44-4.43 9.87-9.88 9.87zm8.41-18.28A11.8 11.8 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.94L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.16-3.48-8.41z"/></svg>
+  </a>
+
+  <script>
+    // navbar muda ao rolar
+    const header = document.getElementById('header');
+    addEventListener('scroll', () => header.classList.toggle('scrolled', scrollY > 30), { passive: true });
+
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // luz que acompanha o mouse
+    const glow = document.getElementById('cursor-glow');
+    if (!reduceMotion && matchMedia('(pointer: fine)').matches) {
+      addEventListener('mousemove', (e) => {
+        glow.style.left = e.clientX + 'px';
+        glow.style.top = e.clientY + 'px';
+      }, { passive: true });
+    } else {
+      glow.style.display = 'none';
+    }
+
+    // tilt 3D no cartão do hero
+    const tilt = document.getElementById('tilt-card');
+    if (tilt && !reduceMotion) {
+      tilt.addEventListener('mousemove', (e) => {
+        const r = tilt.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width;
+        const y = (e.clientY - r.top) / r.height;
+        tilt.style.transform = `rotateY(${(x - 0.5) * 14}deg) rotateX(${(0.5 - y) * 12}deg)`;
+        tilt.style.setProperty('--mx', x * 100 + '%');
+        tilt.style.setProperty('--my', y * 100 + '%');
+      });
+      tilt.addEventListener('mouseleave', () => { tilt.style.transform = 'rotateY(0) rotateX(0)'; });
+    }
+
+    // brilho que segue o mouse nos cards de serviço
+    document.querySelectorAll('.svc').forEach((card) => {
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', ((e.clientX - r.left) / r.width) * 100 + '%');
+        card.style.setProperty('--my', ((e.clientY - r.top) / r.height) * 100 + '%');
+      });
+    });
+
+    // reveal on scroll
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+    // contadores animados das estatísticas
+    const counters = document.querySelectorAll('[data-count]');
+    const cio = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        cio.unobserve(en.target);
+        const el = en.target;
+        const target = +el.dataset.count;
+        const suffix = target >= 100 ? '+' : '';
+        if (reduceMotion) { el.textContent = target + suffix; return; }
+        const t0 = performance.now();
+        const dur = 1400;
+        (function tick(now) {
+          const p = Math.min((now - t0) / dur, 1);
+          el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))) + (p === 1 ? suffix : '');
+          if (p < 1) requestAnimationFrame(tick);
+        })(t0);
+      });
+    }, { threshold: 0.6 });
+    counters.forEach((el) => cio.observe(el));
+  </script>
+</body>
+</html>
